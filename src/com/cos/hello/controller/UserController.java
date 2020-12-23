@@ -2,6 +2,7 @@ package com.cos.hello.controller;
 
 import java.io.IOException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 // javax로 시작하는 패키지는 톰켓이 들고 있는 라이브러리
@@ -54,23 +55,25 @@ public class UserController extends HttpServlet{
 		
 	}
 	
-	private void route(String gubun, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+	private void route(String gubun, HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 		if(gubun.equals("login")) {
 			resp.sendRedirect("auth/login.jsp"); // 한번 더 request
 		} else if(gubun.equals("join")) {
 			resp.sendRedirect("auth/join.jsp"); // 한번 더 request
 		} else if(gubun.equals("selectOne")) { // 유저정보 보기
 			// 인증이 필요한 페이지
+			String result;
 			HttpSession session = req.getSession();
 			if(session.getAttribute("sessionUser")!=null) { // 인증끝
 				Users user = (Users)session.getAttribute("sessionUser"); // 다운캐스팅
-				System.out.println("인증되었습니다.");
+				result = "인증되었습니다.";
 				System.out.println(user);
 			} else {
-				System.out.println("인증되지 않았습니다.");
+				result = "인증되지않았습니다.";
 			}
-			
-			resp.sendRedirect("user/selectOne.jsp"); // 한번 더 request
+			req.setAttribute("result", result);
+			RequestDispatcher dis = req.getRequestDispatcher("user/selectOne.jsp"); // request 유지
+			dis.forward(req, resp);
 		}else if(gubun.equals("updateOne")) {
 			resp.sendRedirect("user/updateOne.jsp"); // 한번 더 request
 		} else if (gubun.equals("joinProc")) { //회원가입 수행해줘
