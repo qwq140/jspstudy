@@ -88,13 +88,27 @@ public class UsersDao {
 	}
 	
 	public int update(Users user) {
-		String sql = "UPDATE users SET password = ?, email = ? WHERE username = ?";
+		String sql = "UPDATE users SET password = ?, email = ? WHERE id = ?";
 		Connection conn = DBConn.getInstance();
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, user.getPassword());
 			pstmt.setString(2, user.getEmail());
-			pstmt.setString(3, user.getUsername());
+			pstmt.setInt(3, user.getId());
+			int result = pstmt.executeUpdate(); // 변경된 행의 개수를 리턴, DML(insert, update, delete)
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
+	public int delete(int id) {
+		String sql = "DELETE FROM users WHERE id = ?";
+		Connection conn = DBConn.getInstance();
+		try {
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, id);
 			int result = pstmt.executeUpdate(); // 변경된 행의 개수를 리턴, DML(insert, update, delete)
 			return result;
 		} catch (Exception e) {

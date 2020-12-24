@@ -1,6 +1,7 @@
 package com.cos.hello.service;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import com.cos.hello.dao.UsersDao;
 import com.cos.hello.model.Users;
+import com.cos.hello.util.Script;
 
 public class UsersService { // 테이블명+서비스명
 
@@ -62,11 +64,14 @@ public class UsersService { // 테이블명+서비스명
 			// session에는 사용자 패스워드 절대 넣지 않기
 			session.setAttribute("sessionUser", userEntity);
 			// 모든 응답에는 jSessionId가 쿠키로 추가된다.
-
 			// 4번 index.jsp 페이지로 이동
-			resp.sendRedirect("index.jsp");
+			// 한글처리를 위해 resp 객체를 건드린다.
+			// MIME 타입 공부
+			// Http Header에 Content-Type 공부 블로깅 
+			Script.href(resp, "index.jsp", "로그인성공");
+			
 		} else {
-			resp.sendRedirect("auth/login.jsp");
+			Script.back(resp, "로그인실패");
 		}
 	}
 
@@ -106,18 +111,18 @@ public class UsersService { // 테이블명+서비스명
 	
 	public void 유저정보수정(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException  {
 		// 1번 전달되는 값 받기
-		String username = req.getParameter("username");
+		int id = Integer.parseInt(req.getParameter("id"));
 		String password = req.getParameter("password");
 		String email = req.getParameter("email");
 		
 		System.out.println("=============updateProc Start=============");
-		System.out.println(username);
+		System.out.println(id);
 		System.out.println(password);
 		System.out.println(email);
 		System.out.println("=============updateProc End=============");
 		
 		Users user = Users.builder()
-				.username(username)
+				.id(id)
 				.password(password)
 				.email(email)
 				.build();
@@ -126,9 +131,28 @@ public class UsersService { // 테이블명+서비스명
 		int result = usersDao.update(user);
 		
 		if(result == 1) {
-			resp.sendRedirect("auth/login.jsp");
+			resp.sendRedirect("index.jsp");
 		} else {
-			resp.sendRedirect("user/updateOne.jsp");
+			// 이전 페이지로 이동
+			resp.sendRedirect("user?gubun=updateOne");
+		}
+		
+	}
+	
+	public void 회원탈퇴(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException  {
+		// 1번 전달되는 값 받기
+		int id = Integer.parseInt(req.getParameter("id"));
+		
+		UsersDao usersDao = new UsersDao();
+		int result = usersDao.delete(id);
+		
+		if(result == 1) {
+			HttpSession session = req.getSession();
+			session.invalidate(); // 세션 무효화
+			resp.sendRedirect("index.jsp");
+		} else {
+			// 이전 페이지로 이동
+			resp.sendRedirect("user?gubun=selectOne");
 		}
 		
 	}

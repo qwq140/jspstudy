@@ -13,14 +13,17 @@
 			<th>이메일</th>
 		</tr>
 		<tr>
-			<th>${user.id}</th>
 			<th>
-				<input type="text" name="username"	value="${user.username}"  readonly>
+				<input type="hidden" name="username"	value="${user.id}" />
+				${user.id}
 			</th>
 			<th>
-				<input type="password" name="password"	value="${user.password}"></th>
+				${user.username}
+			</th>
 			<th>
-				<input type="email" name="email" value="${user.email}">
+				<input type="password" name="password"	value="${user.password}"/></th>
+			<th>
+				<input type="email" name="email" value="${user.email}"/>
 			</th>
 		</tr>
 	</table>

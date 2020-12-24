@@ -3,7 +3,6 @@
     
 <%
 	String contextPath = request.getContextPath();
-	out.println(contextPath);
 %>
 
 <!DOCTYPE html>
