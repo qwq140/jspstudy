@@ -56,6 +56,9 @@ public class UserController extends HttpServlet{
 	}
 	
 	protected void doProcess(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//		req.setCharacterEncoding("utf-8");
+		// req.getParameter 함수 실행시에 파싱하기 때문에
+		// 파싱전에 인코딩 해줘야 함.
 		System.out.println("user process 요청");
 		String gubun = req.getParameter("gubun"); // 쿼리스트링
 		System.out.println(gubun);
@@ -64,6 +67,8 @@ public class UserController extends HttpServlet{
 	}
 	
 	private void route(String gubun, HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+		
+		
 		UsersService usersService = new UsersService();
 		
 		if(gubun.equals("login")) {

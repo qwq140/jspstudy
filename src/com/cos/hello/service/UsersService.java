@@ -18,7 +18,7 @@ public class UsersService { // 테이블명+서비스명
 	public void 회원가입(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		// 데이터 원형 username=ssar&password=1234&email=ssar@nate.com
 		// 1번 form의 input태그에 있는 3가지 값 username, password, email 받기
-
+		
 		// getParameter함수는 get방식의 데이터와 post방식의 데이터를 받을 수 있다.
 		// 단 post방식에서는 데이터 타입이 x-www-form-urlencoded 방식만 받을 수 있음.
 		String username = req.getParameter("username");
