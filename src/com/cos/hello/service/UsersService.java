@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.cos.hello.Dto.JoinDto;
+import com.cos.hello.Dto.LoginDto;
+
 import com.cos.hello.dao.UsersDao;
 import com.cos.hello.model.Users;
 import com.cos.hello.util.Script;
@@ -21,19 +24,11 @@ public class UsersService { // 테이블명+서비스명
 		
 		// getParameter함수는 get방식의 데이터와 post방식의 데이터를 받을 수 있다.
 		// 단 post방식에서는 데이터 타입이 x-www-form-urlencoded 방식만 받을 수 있음.
-		String username = req.getParameter("username");
-		String password = req.getParameter("password");
-		String email = req.getParameter("email");
-		System.out.println("=============joinProc Start=============");
-		System.out.println(username);
-		System.out.println(password);
-		System.out.println(email);
-		System.out.println("=============joinProc End=============");
-
-		Users user = Users.builder().username(username).password(password).email(email).build();
+		
+		JoinDto joinDto = (JoinDto)req.getAttribute("dto");
 
 		UsersDao usersDao = new UsersDao(); // 싱글톤패턴으로 만들기(UsersDao에서)
-		int result = usersDao.insert(user);
+		int result = usersDao.insert(joinDto);
 
 		if (result == 1) {
 			// 3번 INSERT가 정상적으로 되었다면 index.jsp를 응답!!
@@ -46,17 +41,11 @@ public class UsersService { // 테이블명+서비스명
 
 	public void 로그인(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		// 1번 전달되는 값 받기
-		String username = req.getParameter("username");
-		String password = req.getParameter("password");
-		System.out.println("=============loginProc Start=============");
-		System.out.println(username);
-		System.out.println(password);
-		System.out.println("=============loginProc End=============");
-
-		Users user = Users.builder().username(username).password(password).build();
+		
+		LoginDto loginDto = (LoginDto)req.getAttribute("dto");
 
 		UsersDao usersDao = new UsersDao(); // 싱글톤패턴으로 만들기(UsersDao에서)
-		Users userEntity = usersDao.login(user);
+		Users userEntity = usersDao.login(loginDto);
 
 		if (userEntity != null) {
 			// 3번

@@ -32,10 +32,7 @@ public class AttackFilter implements Filter{
 			// username에 < > 꺽쇠 들어오는 것을 방어
 			// 만약 꺽쇠가 들어오면 전부 &lt; &gt;
 			// 다시 필터 타게 할 예정
-			
-			
 		}
-		
 		
 		System.out.println("공격 방어 필터 실행");
 		chain.doFilter(request, response);
